@@ -35,7 +35,7 @@ export function Home() {
     <>
       <Header />
       <Flex direction="column" gap="9" mt="9">
-        <Flex direction="column">
+        <Flex direction="column" height="300px" justify="center">
           <Heading size="9" align="center">
             A Youtube Video
           </Heading>
