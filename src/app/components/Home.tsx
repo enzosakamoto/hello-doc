@@ -1,18 +1,37 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
-import { Flex, Button, Heading, TextField, Spinner } from '@radix-ui/themes'
+import {
+  Flex,
+  Button,
+  Heading,
+  TextField,
+  Spinner,
+  Card,
+  Box
+} from '@radix-ui/themes'
 import { Header } from '../components/Header'
 import { FormEvent, useRef, useState } from 'react'
 
+type Response = {
+  title?: string
+  thumbnail?: string
+  message: string
+}
+
 export function Home() {
   const [isLoading, setIsLoading] = useState(false)
+  const [videoInfo, setVideoInfo] = useState<{
+    title: string
+    thumbnail: string
+  } | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     try {
-      const res = await fetch('/api/validateUrl', {
+      const res = await fetch('/api/getVideoInfo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -21,14 +40,17 @@ export function Home() {
           url: inputRef.current?.value
         })
       })
-      const result = await res.json()
-      alert(result.message)
+      const result: Response = await res.json()
+      if (!res.ok) {
+        throw new Error(`Erro: ${result.message}`)
+      }
+      setVideoInfo({ title: result.title!, thumbnail: result.thumbnail! })
     } catch (error) {
-      setIsLoading(false)
+      console.log('as')
       alert((error as Error).message)
-      return
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }
 
   return (
@@ -60,6 +82,27 @@ export function Home() {
             </Button>
           </Flex>
         </Flex>
+        {videoInfo && (
+          <Box maxWidth="1024px">
+            <Card>
+              <Flex gap="3" align="center" direction="column">
+                <img
+                  src={videoInfo?.thumbnail}
+                  alt={videoInfo?.title}
+                  className="rounded-lg"
+                />
+                <Button
+                  size="3"
+                  variant="soft"
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                >
+                  Download
+                </Button>
+              </Flex>
+            </Card>
+          </Box>
+        )}
       </Flex>
     </>
   )
