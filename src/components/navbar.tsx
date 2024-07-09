@@ -10,17 +10,21 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 export function Navbar() {
   const { setTheme } = useTheme()
 
   return (
     <nav className="fixed left-0 top-0 z-50 flex w-full border-b-[1px] border-gray-300 p-4 px-12">
-      <div className="bg-background/30 absolute left-0 top-0 -z-10 h-full w-full backdrop-blur-md"></div>
+      <div className="absolute left-0 top-0 -z-10 h-full w-full bg-background/30 backdrop-blur-md"></div>
       <div className="flex w-full items-center justify-between">
-        <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-xl">
+        <Link
+          href="/"
+          className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-xl"
+        >
           Hello Doc
-        </h1>
+        </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon">
